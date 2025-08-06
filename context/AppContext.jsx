@@ -36,8 +36,8 @@ export const AppContextProvider = (props) => {
         }
     }
 
-    const register = async (name, email, password) => {
-        const user = await registerService(name, email, password);
+    const register = async (name, email, password, password_confirmation) => {
+        const user = await registerService(name, email, password, password_confirmation);
         if (user) {
             setUserData(user);
             const isSeller = user?.role_id === 1 || user?.role_id === 2;

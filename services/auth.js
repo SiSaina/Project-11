@@ -6,9 +6,10 @@ export async function csrf() {
     });
 }
 
-export async function register(name, email, password) {
+export async function register(name, email, password, password_confirmation) {
     await csrf();
-
+    let role_id = 3;
+    alert(JSON.stringify({ name, email, password, password_confirmation, role_id }));
     const res = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: {
@@ -16,7 +17,7 @@ export async function register(name, email, password) {
             Accept: 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, password_confirmation, role_id }),
     });
     if (!res.ok) throw new Error('Registration failed');
     const data = await res.json();
@@ -55,7 +56,6 @@ export async function getUser() {
     if (!res.ok) throw new Error('Failed to fetch user');
     return res.json();
 }
-
 
 export async function logout() {
     const token = localStorage.getItem('token');

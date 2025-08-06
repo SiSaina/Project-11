@@ -9,15 +9,17 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const RegisterPage = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
     const router = useRouter();
     const { register, login } = useAppContext();
 
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await register(email, password);
+            await register(name, email, password, passwordConfirm);
             await login(email, password);
             router.push('/');
         } catch (error) {
@@ -39,6 +41,8 @@ const RegisterPage = () => {
                             <input
                                 type="text"
                                 id="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 required
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
@@ -70,6 +74,8 @@ const RegisterPage = () => {
                             <input
                                 type="password"
                                 id="confirm-password"
+                                value={passwordConfirm}
+                                onChange={(e) => setPasswordConfirm(e.target.value)}
                                 required
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
