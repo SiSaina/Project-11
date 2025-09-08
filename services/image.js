@@ -46,9 +46,13 @@ export async function postImage(imageData) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(imageData),
-  });
+  });  
+  const data = await res.json();
 
-  if (!res.ok) throw new Error('Failed to create image');
+  if (!res.ok) {
+    alert('Image upload failed: ' + JSON.stringify(data));
+    throw new Error(data.message || 'Failed to create image');
+  }
   return res.json();
 }
 

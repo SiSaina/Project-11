@@ -8,8 +8,7 @@ export async function csrf() {
 
 export async function register(name, email, password, password_confirmation) {
     await csrf();
-    let role_id = 3;
-    alert(JSON.stringify({ name, email, password, password_confirmation, role_id }));
+    let role_id = 1;
     const res = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: {
@@ -46,7 +45,7 @@ export async function login(email, password) {
 export async function getUser() {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('No token found');
-    const res = await fetch(`${API_URL}/api/user?includeAddresses=true`, {
+    const res = await fetch(`${API_URL}/api/users?includeAddresses=true`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`,

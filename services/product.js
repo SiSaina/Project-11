@@ -50,8 +50,11 @@ export async function postProduct(productData) {
     },
     body: JSON.stringify(productData),
   });
-
-  if (!res.ok) throw new Error('Failed to create product');
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    console.error("Product creation failed:", errBody);
+    throw new Error('Failed to create product');
+  }
   return res.json();
 }
 

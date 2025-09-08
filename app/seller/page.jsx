@@ -5,6 +5,8 @@ import Image from "next/image";
 import { getCategory } from "@/services/category";
 import { postProduct } from "@/services/product";
 import { postImage } from "@/services/image";
+import { stringify } from "postcss";
+
 const AddProduct = () => {
 
   const [files, setFiles] = useState([]);
@@ -42,21 +44,20 @@ const AddProduct = () => {
       offerPrice: parseFloat(offerPrice),
       date: new Date().toISOString().split('T')[0],
     };
-
     try {
       setLoading(true);
-      const response = await postProduct(productData);
-      // This is for upload images
+      await postProduct(productData);
+      
+      // This is for uploading images
       // for (const file of files) {
       //   if (file) {
       //     const imageData = {
-      //       productId: response.id,
-      //       url: file
+      //       productId: response.data.id,
+      //       url: file.name,
       //     };
       //     await postImage(imageData);
       //   }
       // }
-      
       setName('');
       setDescription('');
       setSelectedCategory('');
@@ -79,8 +80,9 @@ const AddProduct = () => {
             {[...Array(4)].map((_, index) => (
               <label key={index} htmlFor={`image${index}`}>
                 <input onChange={(e) => {
+                  const file = e.target.files[0];
                   const updatedFiles = [...files];
-                  updatedFiles[index] = e.target.files[0];
+                  updatedFiles[index] = file;
                   setFiles(updatedFiles);
                 }} type="file" id={`image${index}`} hidden />
                 <Image

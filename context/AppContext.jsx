@@ -2,8 +2,8 @@
 import { productsDummyData, userDummyData } from "@/assets/assets";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import { getUser, login as loginService, logout as logoutService, register as registerService } from "@/services/auth";
-
+import { login as loginService, logout as logoutService, register as registerService } from "@/services/auth";
+import { getUser } from "@/services/user"
 export const AppContext = createContext();
 
 export const useAppContext = () => {
@@ -29,6 +29,7 @@ export const AppContextProvider = (props) => {
             const data = await getUser();
             const isSeller = user?.role_id === 1 || user?.role_id === 2;
             setIsSeller(isSeller);
+            alert(JSON.stringify(data));
             setUserData(data);
         } catch (err) {
             console.warn("User not logged in or failed to fetch user:", err);
