@@ -7,7 +7,6 @@ import { assets } from '@/assets/assets';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
-import { getAddress } from '@/services/address';
 
 const ProfilePage = () => {
     const { userData, logout } = useAppContext();
@@ -15,7 +14,6 @@ const ProfilePage = () => {
     const router = useRouter()
     useEffect(() => {
         if (userData) {
-            alert(JSON.stringify(userData));
             setUser(userData);
         }
     }, [userData]);
@@ -71,19 +69,30 @@ const ProfilePage = () => {
                     </div>
 
                     {user?.addresses?.length > 0 ? (
-                        <div className="mt-6">
-                            <h2 className="text-lg font-semibold text-gray-800 mb-2">Addresses</h2>
-                            <ul className="space-y-3 text-gray-700 text-sm">
-                                {user.addresses.map((address, index) => (
-                                    <li key={index} className="p-3 bg-gray-50 rounded shadow-sm">
-                                        <p><strong>Full Name:</strong> {address.full_name}</p>
-                                        <p><strong>Postal Code:</strong> {address.postal_code}</p>
-                                        <p><strong>Area:</strong> {address.area}</p>
-                                        <p><strong>City:</strong> {address.city}</p>
-                                        <p><strong>State:</strong> {address.state}</p>
-                                    </li>
-                                ))}
-                            </ul>
+                        <div>
+                            <div className="mt-6">
+                                <h2 className="text-lg font-semibold text-gray-800 mb-2">Addresses</h2>
+                                <ul className="space-y-3 text-gray-700 text-sm">
+                                    {user.addresses.map((address, index) => (
+                                        <li key={index} className="p-3 bg-gray-50 rounded shadow-sm">
+                                            <p><strong>Full Name:</strong> {address.full_name}</p>
+                                            <p><strong>Postal Code:</strong> {address.postal_code}</p>
+                                            <p><strong>Street name:</strong> {address.street_name}</p>
+                                            <p><strong>Suburb:</strong> {address.suburb}</p>
+                                            <p><strong>City:</strong> {address.city}</p>
+                                            <p><strong>Country:</strong> {address.country}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className='mt-6'>
+                                <button
+                                    className='px-4 py-2 bg-blue-700 text-white rounded-xl shadow-md hover:bg-blue-800 transition-all'
+                                    onClick={() => router.push('/add-address')}
+                                >
+                                    Add Address
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <div className='mt-6'>

@@ -3,7 +3,7 @@ import { productsDummyData, userDummyData } from "@/assets/assets";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { login as loginService, logout as logoutService, register as registerService } from "@/services/auth";
-import { getUser } from "@/services/user"
+import { getUser, getUserAddress } from "@/services/user"
 export const AppContext = createContext();
 
 export const useAppContext = () => {
@@ -27,10 +27,10 @@ export const AppContextProvider = (props) => {
     const fetchUserData = async () => {
         try {
             const data = await getUser();
-            const isSeller = user?.role_id === 1 || user?.role_id === 2;
-            setIsSeller(isSeller);
-            alert(JSON.stringify(data));
             setUserData(data);
+
+            const isSeller = data?.role_id === 1 || data?.role_id === 2;
+            setIsSeller(isSeller);
         } catch (err) {
             console.warn("User not logged in or failed to fetch user:", err);
             setUserData(null);
@@ -49,9 +49,12 @@ export const AppContextProvider = (props) => {
     const login = async (email, password) => {
         const user = await loginService(email, password);
         if (user) {
-            setUserData(user);
-            const isSeller = user?.role_id === 1 || user?.role_id === 2;
+            const fullUser = await getUser();
+            setUserData(fullUser);
+
+            const isSeller = fullUser?.role_id === 1 || fullUser?.role_id === 2;
             setIsSeller(isSeller);
+
             router.push('/');
         }
     }
