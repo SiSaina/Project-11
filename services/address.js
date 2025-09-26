@@ -37,7 +37,6 @@ export async function getAddress({ id = null } = {}) {
 
 export async function postAddress(addressData) {
   const token = getToken();
-  alert(JSON.stringify(addressData));
   const res = await fetch(`${API_URL}/api/v1/addresses`, {
     method: 'POST',
     headers: {

@@ -32,7 +32,6 @@ export async function getCategory({ id = null, includeProducts = false } = {}) {
 
 export async function postCategory(categoryData) {
   const token = getToken();
-
   const res = await fetch(`${API_URL}/api/v1/categories`, {
     method: 'POST',
     headers: {

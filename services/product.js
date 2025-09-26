@@ -38,6 +38,29 @@ export async function getProduct({ id = null, includeImages = false, includeOrde
 
   return res.json();
 }
+export async function getOneProduct(productId, options = {}) {
+  const token = getToken();
+  const params = new URLSearchParams();
+  if (options.includeImages) params.append("includeImages", "true");
+  if (options.includeOrders) params.append("includeOrders", "true");
+  if (options.includeCategory) params.append("includeCategory", "true");
+
+  const res = await fetch(`${API_URL}/api/v1/products/${productId}?${params.toString()}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    console.error("Failed to fetch product:", errBody);
+    throw new Error("Failed to fetch product");
+  }
+
+  return res.json();
+}
 
 export async function postProduct(productData) {
   const token = getToken();

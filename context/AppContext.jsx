@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { login as loginService, logout as logoutService, register as registerService } from "@/services/auth";
 import { getUser, getUserAddress } from "@/services/user"
+import { getOneProduct, getProduct } from "@/services/product";
 export const AppContext = createContext();
 
 export const useAppContext = () => {
@@ -16,12 +17,30 @@ export const AppContextProvider = (props) => {
     const router = useRouter()
 
     const [products, setProducts] = useState([])
+    const [product, setProduct] = useState([])
     const [userData, setUserData] = useState(null)
     const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
 
+    // const fetchProductData = async () => {
+    //     setProducts(productsDummyData)
+    // }
+
     const fetchProductData = async () => {
-        setProducts(productsDummyData)
+        try {
+            const data = await getProduct();
+            setProducts(data.data ?? []);
+        } catch (err) {
+            console.error("Failed to fetch product: ", err);
+        }
+    }
+    const fetchOneProduct = async () => {
+        try {
+            const data = await getOneProduct();
+            setProduct(data);
+        } catch (err) {
+            console.error("Failed to fetch product: ", err);
+        }
     }
 
     const fetchUserData = async () => {
@@ -126,6 +145,7 @@ export const AppContextProvider = (props) => {
         isSeller, setIsSeller,
         userData, fetchUserData,
         products, fetchProductData,
+        product, fetchOneProduct,
         cartItems, setCartItems,
         addToCart, updateCartQuantity,
         getCartCount, getCartAmount
