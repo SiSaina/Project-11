@@ -21,13 +21,17 @@ const Product = () => {
     const [productData, setProductData] = useState(null);
 
     const fetchProductData = async () => {
-        try {
-            const data = getOneProduct(id, {includeImages: true, includeCategory: true, includeOrders: true});
-            setProductData(data);
-        } catch (error) {
-            console.error("Failed to fetch product: ", error.message);
-        }
+    try {
+        const data = await getOneProduct(id, {
+            includeImages: true,
+            includeCategory: true,
+            includeOrders: true
+        });
+        setProductData(data.data);
+    } catch (error) {
+        console.error("Failed to fetch product: ", error.message);
     }
+};
 
     useEffect(() => {
         fetchProductData();
@@ -109,7 +113,7 @@ const Product = () => {
                                 <tr>
                                     <td className="text-gray-600 font-medium">Category</td>
                                     <td className="text-gray-800/50">
-                                        {productData.category}
+                                        {productData.category?.name}
                                     </td>
                                 </tr>
                             </tbody>

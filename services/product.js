@@ -45,7 +45,9 @@ export async function getOneProduct(productId, options = {}) {
   if (options.includeOrders) params.append("includeOrders", "true");
   if (options.includeCategory) params.append("includeCategory", "true");
 
-  const res = await fetch(`${API_URL}/api/v1/products/${productId}?${params.toString()}`, {
+  const url = `${API_URL}/api/v1/products/${productId}${params.toString() ? "?" + params.toString() : ""}`;
+
+  const res = await fetch(url, {
     method: "GET",
     headers: {
       Accept: "application/json",
