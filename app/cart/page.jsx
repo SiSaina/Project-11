@@ -41,7 +41,7 @@ const Cart = () => {
               </thead>
               <tbody>
                 {Object.keys(cartItems).map((itemId) => {
-                  const product = products.find(product => String(product._id) === String(itemId));
+                  const product = products.find(product => String(product.id) === String(itemId));
 
                   if (!product || cartItems[itemId] <= 0) return null;
 
@@ -80,11 +80,11 @@ const Cart = () => {
                       </td>
                       <td className="py-4 md:px-4 px-1">
                         <div className="flex items-center md:gap-2 gap-1">
-                          <button onClick={() => updateCartQuantity(product._id, cartItems[itemId] - 1)}>
+                          <button onClick={() => updateCartQuantity(product.id, cartItems[itemId] - 1)}>
                             <Image src={assets.decrease_arrow} alt="decrease_arrow" className="w-4 h-4" />
                           </button>
                           <input
-                            onChange={e => updateCartQuantity(product._id, Number(e.target.value))}
+                            onChange={e => updateCartQuantity(product.id, Number(e.target.value))}
                             type="number"
                             value={cartItems[itemId]}
                             className="w-8 border text-center appearance-none"

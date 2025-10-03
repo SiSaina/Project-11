@@ -1,5 +1,7 @@
 import { addressDummyData } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
+import { postOrder } from "@/services/order";
+import { postOrderDetail } from "@/services/orderDetail";
 import React, { useEffect, useState } from "react";
 
 const OrderSummary = () => {
@@ -9,7 +11,6 @@ const OrderSummary = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [userAddresses, setUserAddresses] = useState([]);
-  const [user, setUser] = useState([]);
 
   const fetchUserAddresses = async () => {
     if (userData?.addresses) {
@@ -23,8 +24,42 @@ const OrderSummary = () => {
   };
 
   const createOrder = async () => {
+    if (!selectedAddress) {
+      alert("Please select an address before placing the order.");
+      return;
+    }
 
-  }
+    if (!cartItems || Object.keys(cartItems).length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const orderData = Object.keys(cartItems).map((itemId) => ({
+        product_id: itemId,
+        quantity: cartItems[itemId],
+      }));
+
+      await postOrder(orderData);
+
+      const orderDetailData = {
+        user_id: userData.id,
+        address_id: selectedAddress.id,
+        status: "pending",
+        date: new Date().toISOString(),
+      };
+
+      await postOrderDetail(orderDetailData);
+
+      alert("Order placed successfully!");
+      setSelectedAddress(null);
+    } catch (error) {
+      console.error("Failed to create order:", error);
+      alert("Failed to place order. Please try again.");
+    }
+  };
 
   useEffect(() => {
     fetchUserAddresses();

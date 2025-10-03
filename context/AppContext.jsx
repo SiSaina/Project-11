@@ -123,16 +123,10 @@ export const AppContextProvider = (props) => {
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const itemId in cartItems) {
-            const quantity = cartItems[itemId];
-
             const itemInfo = products.find((p) => String(p.id) === String(itemId));
-            console.log(cartItems);
-            console.log(quantity);
-            console.log(itemInfo);
-            console.log(products);
-            if (itemInfo && quantity > 0) {
-                // Convert offerPrice to number
-                totalAmount += Number(itemInfo.offerPrice) * quantity;
+
+            if (itemInfo) {
+                totalAmount += itemInfo.offerPrice * cartItems[itemId];
             }
         }
         return Math.round(totalAmount * 100) / 100;
