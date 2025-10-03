@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { login as loginService, logout as logoutService, register as registerService } from "@/services/auth";
 import { getUser, getUserAddress } from "@/services/user"
 import { getOneProduct, getProduct } from "@/services/product";
+import { isHTTPMethod } from "next/dist/server/web/http";
 export const AppContext = createContext();
 
 export const useAppContext = () => {
@@ -121,14 +122,22 @@ export const AppContextProvider = (props) => {
 
     const getCartAmount = () => {
         let totalAmount = 0;
-        for (const items in cartItems) {
-            let itemInfo = products.find((product) => product._id === items);
-            if (cartItems[items] > 0) {
-                totalAmount += itemInfo.offerPrice * cartItems[items];
+        for (const itemId in cartItems) {
+            const quantity = cartItems[itemId];
+
+            const itemInfo = products.find((p) => String(p.id) === String(itemId));
+            console.log(cartItems);
+            console.log(quantity);
+            console.log(itemInfo);
+            console.log(products);
+            if (itemInfo && quantity > 0) {
+                // Convert offerPrice to number
+                totalAmount += Number(itemInfo.offerPrice) * quantity;
             }
         }
-        return Math.floor(totalAmount * 100) / 100;
-    }
+        return Math.round(totalAmount * 100) / 100;
+    };
+
 
     useEffect(() => {
         fetchProductData()

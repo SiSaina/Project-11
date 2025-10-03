@@ -4,15 +4,18 @@ import React, { useEffect, useState } from "react";
 
 const OrderSummary = () => {
 
-  const { currency, router, getCartCount, getCartAmount } = useAppContext()
+  const { userData, currency, router, getCartCount, getCartAmount } = useAppContext()
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [userAddresses, setUserAddresses] = useState([]);
+  const [user, setUser] = useState([]);
 
   const fetchUserAddresses = async () => {
-    setUserAddresses(addressDummyData);
-  }
+    if (userData?.addresses) {
+      setUserAddresses(userData.addresses);
+    }
+  };
 
   const handleAddressSelect = (address) => {
     setSelectedAddress(address);
@@ -25,7 +28,7 @@ const OrderSummary = () => {
 
   useEffect(() => {
     fetchUserAddresses();
-  }, [])
+  }, [userData])
 
   return (
     <div className="w-full md:w-96 bg-gray-500/5 p-5">
@@ -45,7 +48,8 @@ const OrderSummary = () => {
             >
               <span>
                 {selectedAddress
-                  ? `${selectedAddress.fullName}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.state}`
+                  ? `${selectedAddress.full_name}, ${selectedAddress.street_name}, ${selectedAddress.suburb} , 
+                    ${selectedAddress.city}, ${selectedAddress.country}. ${selectedAddress.postal_code}`
                   : "Select Address"}
               </span>
               <svg className={`w-5 h-5 inline float-right transition-transform duration-200 ${isDropdownOpen ? "rotate-0" : "-rotate-90"}`}
@@ -63,7 +67,7 @@ const OrderSummary = () => {
                     className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer"
                     onClick={() => handleAddressSelect(address)}
                   >
-                    {address.fullName}, {address.area}, {address.city}, {address.state}
+                    {address.full_name}, {address.street_name}, {address.suburb}, {address.city}, {address.country}, {address.postal_code}
                   </li>
                 ))}
                 <li
