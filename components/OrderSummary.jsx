@@ -6,11 +6,12 @@ import React, { useEffect, useState } from "react";
 
 const OrderSummary = () => {
 
-  const { userData, currency, router, getCartCount, getCartAmount } = useAppContext()
+  const { userData, currency, router, getCartCount, getCartAmount, cartItems } = useAppContext()
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [userAddresses, setUserAddresses] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchUserAddresses = async () => {
     if (userData?.addresses) {
@@ -28,7 +29,6 @@ const OrderSummary = () => {
       alert("Please select an address before placing the order.");
       return;
     }
-
     if (!cartItems || Object.keys(cartItems).length === 0) {
       alert("Your cart is empty.");
       return;
@@ -36,19 +36,19 @@ const OrderSummary = () => {
 
     try {
       setLoading(true);
-
       const orderData = Object.keys(cartItems).map((itemId) => ({
-        product_id: itemId,
+        productId: parseInt(itemId),
         quantity: cartItems[itemId],
       }));
-
-      await postOrder(orderData);
+      const orderResponse = await postOrder(orderData);
+      const orderId = orderResponse.order_id;
 
       const orderDetailData = {
-        user_id: userData.id,
-        address_id: selectedAddress.id,
+        userId: userData.id,
+        addressId: selectedAddress.id,
+        orderId: orderId,
         status: "pending",
-        date: new Date().toISOString(),
+        date: new Date().toISOString().split("T")[0],
       };
 
       await postOrderDetail(orderDetailData);
@@ -155,7 +155,7 @@ const OrderSummary = () => {
       </div>
 
       <button onClick={createOrder} className="w-full bg-orange-600 text-white py-3 mt-5 hover:bg-orange-700">
-        Place Order
+        {loading ? "Placing..." : "Place order"}
       </button>
     </div>
   );

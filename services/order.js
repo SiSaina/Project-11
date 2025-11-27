@@ -37,7 +37,7 @@ export async function getOrder({ id = null } = {}) {
 
 export async function postOrder(orderData) {
   const token = getToken();
-  const res = await fetch(`${API_URL}/api/v1/orders`, {
+  const res = await fetch(`${API_URL}/api/v1/orders/bulk`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
