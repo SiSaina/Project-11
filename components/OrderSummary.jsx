@@ -41,8 +41,21 @@ const OrderSummary = () => {
         quantity: cartItems[itemId],
       }));
       const orderResponse = await postOrder(orderData);
-      const orderId = orderResponse.order_id;
 
+      orderResponse.orders.forEach(async (order) => {
+        await createOrderDetail(order.id);
+      });
+
+      setLoading(false);
+      router.push("/all-products");
+      setSelectedAddress(null);
+    } catch (error) {
+      console.error("Failed to create order:", error);
+      alert("Failed to place order. Please try again.");
+    }
+  };
+  const createOrderDetail = async (orderId) => {
+    try {
       const orderDetailData = {
         userId: userData.id,
         addressId: selectedAddress.id,
@@ -50,17 +63,11 @@ const OrderSummary = () => {
         status: "pending",
         date: new Date().toISOString().split("T")[0],
       };
-
       await postOrderDetail(orderDetailData);
-
-      alert("Order placed successfully!");
-      setSelectedAddress(null);
     } catch (error) {
-      console.error("Failed to create order:", error);
-      alert("Failed to place order. Please try again.");
+      console.error("Failed to create order detail:", error);
     }
   };
-
   useEffect(() => {
     fetchUserAddresses();
   }, [userData])
