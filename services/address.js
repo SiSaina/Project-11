@@ -16,8 +16,6 @@ export async function getAddress({ id = null } = {}) {
     url += `/${id}`;
   }
 
-  
-
   if (queryParams.toString()) {
     url += `?${queryParams.toString()}`;
   }
