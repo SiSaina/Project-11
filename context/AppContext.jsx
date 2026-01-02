@@ -23,10 +23,6 @@ export const AppContextProvider = (props) => {
     const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
 
-    // const fetchProductData = async () => {
-    //     setProducts(productsDummyData)
-    // }
-
     const fetchProductData = async () => {
         try {
             const data = await getProduct(true, true, true);
