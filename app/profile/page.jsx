@@ -94,9 +94,9 @@ const ProfilePage = () => {
                                 </button>
                                 <button
                                     className='px-4 py-2 bg-red-700 text-white rounded-xl shadow-md hover:bg-green-800 transition-all'
-                                    onClick={() => router.push(`/order-history/${user.id}`)}
+                                    onClick={() => router.push(`/my-orders/${user.id}`)}
                                 >
-                                    Order history
+                                    My Orders
                                 </button>
                             </div>
                         </div>

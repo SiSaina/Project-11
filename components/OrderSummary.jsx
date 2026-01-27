@@ -47,7 +47,7 @@ const OrderSummary = () => {
       });
 
       setLoading(false);
-      router.push("/all-products");
+      router.push("/order-placed");
       setSelectedAddress(null);
       setCartItems({});
     } catch (error) {

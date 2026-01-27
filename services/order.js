@@ -56,9 +56,6 @@ export async function postOrder(orderData) {
 
 export async function deleteOrder(id) {
   const token = getToken();
-
-
-  
   const res = await fetch(`${API_URL}/api/v1/orders/${id}`, {
     method: 'DELETE',
     headers: {

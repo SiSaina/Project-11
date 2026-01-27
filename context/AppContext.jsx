@@ -23,6 +23,14 @@ export const AppContextProvider = (props) => {
     const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
 
+    const fetchUserOrder = async () => {
+        try {
+            const data = await getUserOrder();
+            setOrders(data);
+        } catch (error) {
+            console.error("Failed to fetch user orders: ", error);
+        }
+    }
     const fetchProductData = async () => {
         try {
             const data = await getProduct(true, true, true);

@@ -54,6 +54,25 @@ export async function postOrderDetail(OrderDetailData) {
   return res.json();
 }
 
+export async function getUserOrderDetail(id){
+  const token = getToken();
+  const res = await fetch(`${API_URL}/api/v1/OrderDetails/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch OrderDetail');
+  }
+
+  return res.json();
+}
+
 export async function deleteOrderDetail(id) {
   const token = getToken();
 
