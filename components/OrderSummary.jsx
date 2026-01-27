@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 
 const OrderSummary = () => {
 
-  const { userData, currency, router, getCartCount, getCartAmount, cartItems } = useAppContext()
+  const { userData, currency, router, getCartCount, getCartAmount, cartItems, setCartItems } = useAppContext()
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -49,6 +49,7 @@ const OrderSummary = () => {
       setLoading(false);
       router.push("/all-products");
       setSelectedAddress(null);
+      setCartItems({});
     } catch (error) {
       console.error("Failed to create order:", error);
       alert("Failed to place order. Please try again.");

@@ -85,7 +85,7 @@ const ProfilePage = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <div className='mt-6'>
+                            <div className='mt-6 flex gap-4'>
                                 <button
                                     className='px-4 py-2 bg-blue-700 text-white rounded-xl shadow-md hover:bg-blue-800 transition-all'
                                     onClick={() => router.push('/add-address')}

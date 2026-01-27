@@ -7,8 +7,8 @@ import Image from "next/image";
 
 const Navbar = () => {
 
-  const { userData, isSeller, router } = useAppContext();
-  
+  const { userData, isSeller, router, cartItems } = useAppContext();
+
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-32 py-3 border-b border-gray-300 text-gray-700">
       <Image
@@ -29,6 +29,21 @@ const Navbar = () => {
 
       <ul className="hidden md:flex items-center gap-4 ">
         <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
+        {cartItems ? (
+          <div className="relative">
+            <button onClick={() => router.push('/cart')}>
+              <Image className="w-4 h-4 mt-2" src={assets.cart_icon} alt="cart icon" />
+              {Object.keys(cartItems).length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-xs font-medium px-1 rounded-full">
+                  {Object.keys(cartItems).length}
+                </span>
+              )}
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
         {userData ? (
           <button onClick={() => router.push('/profile')} className="flex items-center gap-2 hover:text-gray-900 transition">
             <Image src={assets.user_icon} alt="user icon" />

@@ -58,7 +58,7 @@ const Cart = () => {
                               height={720}
                             />
                           </div>
-                          <button 
+                          <button
                             className="md:hidden text-xs text-orange-600 mt-1"
                             onClick={() => updateCartQuantity(product.id, 0)}
                           >
