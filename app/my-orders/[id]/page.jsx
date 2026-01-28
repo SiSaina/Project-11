@@ -1,26 +1,30 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { assets, orderDummyData } from "@/assets/assets";
-import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import Loading from "@/components/Loading";
+import { getUserOrderDetail } from "@/services/orderDetail";
 
 const MyOrders = () => {
 
-    const { currency } = useAppContext();
+    const { userData } = useAppContext();
+    const [userOrders, setUserOrders] = useState();
 
-    const [orders, setOrders] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    const fetchOrders = async () => {
-        setLoading(false);
+    const fetchUserOrders = async (userId) => {
+        try {
+            const data = await getUserOrderDetail(userId);
+            setUserOrders(data.data);
+        } catch (error) {
+            console.error("Failed to fetch user orders: ", error);
+        }
     }
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        if (userData?.id) {
+            fetchUserOrders(userData.id);
+        }
+    }, [userData]);
+
 
     return (
         <>
@@ -28,44 +32,76 @@ const MyOrders = () => {
             <div className="flex flex-col justify-between px-6 md:px-16 lg:px-32 py-6 min-h-screen">
                 <div className="space-y-5">
                     <h2 className="text-lg font-medium mt-6">My Orders</h2>
-                    {loading ? <Loading /> : (<div className="max-w-5xl border-t border-gray-300 text-sm">
-                        {orders.map((order, index) => (
-                            <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-b border-gray-300">
-                                <div className="flex-1 flex gap-5 max-w-80">
-                                    <Image
-                                        className="max-w-16 max-h-16 object-cover"
-                                        src={assets.box_icon}
-                                        alt="box_icon"
-                                    />
-                                    <p className="flex flex-col gap-3">
-                                        <span className="font-medium text-base">
-                                            {order.items.map((item) => item.product.name + ` x ${item.quantity}`).join(", ")}
+                    {userOrders?.length > 0 ? (
+                        <div className="space-y-6">
+                            {userOrders.map((orderDetail) => (
+                                <div
+                                    key={orderDetail.id}
+                                    className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+                                >
+                                    <div className="flex justify-between items-center mb-4">
+                                        <div>
+                                            <h3 className="text-lg font-semibold">
+                                                Order #{orderDetail.orderId}
+                                            </h3>
+                                            <p className="text-sm text-gray-500">
+                                                Date: {orderDetail.date}
+                                            </p>
+                                        </div>
+
+                                        <span
+                                            className={`px-3 py-1 text-sm rounded-full capitalize ${orderDetail.status === 'pending'
+                                                    ? 'bg-yellow-100 text-yellow-700'
+                                                    : 'bg-green-100 text-green-700'
+                                                }`}
+                                        >
+                                            {orderDetail.status}
                                         </span>
-                                        <span>Items : {order.items.length}</span>
-                                    </p>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="border rounded-md p-4">
+                                            <h4 className="font-medium mb-2">Product</h4>
+                                            <p className="text-sm text-gray-600">
+                                                Product ID: {orderDetail.order.productId}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                Quantity: {orderDetail.order.quantity}
+                                            </p>
+                                        </div>
+                                        <div className="border rounded-md p-4">
+                                            <h4 className="font-medium mb-2">User</h4>
+                                            <p className="text-sm text-gray-600">
+                                                Name: {orderDetail.user.name}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                Email: {orderDetail.user.email}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                Phone: {orderDetail.user.phone}
+                                            </p>
+                                        </div>
+                                        <div className="border rounded-md p-4">
+                                            <h4 className="font-medium mb-2">Address</h4>
+                                            <p className="text-sm text-gray-600">
+                                                {orderDetail.address.fullName}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                {orderDetail.address.streetName}, {orderDetail.address.suburb}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                {orderDetail.address.city}, {orderDetail.address.postalCode}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                {orderDetail.address.country}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p>
-                                        <span className="font-medium">{order.address.fullName}</span>
-                                        <br />
-                                        <span >{order.address.area}</span>
-                                        <br />
-                                        <span>{`${order.address.city}, ${order.address.state}`}</span>
-                                        <br />
-                                        <span>{order.address.phoneNumber}</span>
-                                    </p>
-                                </div>
-                                <p className="font-medium my-auto">{currency}{order.amount}</p>
-                                <div>
-                                    <p className="flex flex-col">
-                                        <span>Method : COD</span>
-                                        <span>Date : {new Date(order.date).toLocaleDateString()}</span>
-                                        <span>Payment : Pending</span>
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>)}
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500">No orders found</p>
+                    )}
                 </div>
             </div>
             <Footer />

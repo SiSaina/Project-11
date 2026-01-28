@@ -56,7 +56,7 @@ export async function postOrderDetail(OrderDetailData) {
 
 export async function getUserOrderDetail(id){
   const token = getToken();
-  const res = await fetch(`${API_URL}/api/v1/OrderDetails/${id}`, {
+  const res = await fetch(`${API_URL}/api/v1/orderDetails/userProduct/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

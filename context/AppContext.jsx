@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { login as loginService, logout as logoutService, register as registerService } from "@/services/auth";
 import { getUser, getUserAddress } from "@/services/user"
 import { getOneProduct, getProduct } from "@/services/product";
+import { getUserOrderDetail } from "@/services/orderDetail";
 import { isHTTPMethod } from "next/dist/server/web/http";
 export const AppContext = createContext();
 
@@ -18,19 +19,20 @@ export const AppContextProvider = (props) => {
     const router = useRouter()
 
     const [products, setProducts] = useState([])
-    const [product, setProduct] = useState([])
+    const [product, setProduct] = useState(null)
     const [userData, setUserData] = useState(null)
     const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
+    const [userOrders, setUserOrders] = useState([])
 
-    const fetchUserOrder = async () => {
-        try {
-            const data = await getUserOrder();
-            setOrders(data);
-        } catch (error) {
-            console.error("Failed to fetch user orders: ", error);
-        }
-    }
+    // const fetchUserOrders = async () => {
+    //     try {
+    //         const data = await getUserOrderDetail(userData.id);
+    //         setUserOrders(data.data);
+    //     } catch (error) {
+    //         console.error("Failed to fetch user orders: ", error);
+    //     }
+    // }
     const fetchProductData = async () => {
         try {
             const data = await getProduct(true, true, true);
@@ -136,13 +138,9 @@ export const AppContextProvider = (props) => {
         return Math.round(totalAmount * 100) / 100;
     };
 
-
-    useEffect(() => {
-        fetchProductData()
-    }, [])
-
     useEffect(() => {
         fetchUserData();
+        fetchProductData();
     }, [])
 
     const value = {
@@ -153,6 +151,7 @@ export const AppContextProvider = (props) => {
         userData, fetchUserData,
         products, fetchProductData,
         product, fetchOneProduct,
+        userOrders,
         cartItems, setCartItems,
         addToCart, updateCartQuantity,
         getCartCount, getCartAmount
