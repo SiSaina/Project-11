@@ -37,7 +37,7 @@ const MyOrders = () => {
                             {userOrders.map((orderDetail) => (
                                 <div
                                     key={orderDetail.id}
-                                    className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+                                    className="rounded-lg border border-gray-400 bg-white p-5 shadow-sm"
                                 >
                                     <div className="flex justify-between items-center mb-4">
                                         <div>
@@ -51,24 +51,54 @@ const MyOrders = () => {
 
                                         <span
                                             className={`px-3 py-1 text-sm rounded-full capitalize ${orderDetail.status === 'pending'
-                                                    ? 'bg-yellow-100 text-yellow-700'
-                                                    : 'bg-green-100 text-green-700'
+                                                ? 'bg-yellow-100 text-yellow-700'
+                                                : 'bg-green-100 text-green-700'
                                                 }`}
                                         >
                                             {orderDetail.status}
                                         </span>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div className="border rounded-md p-4">
-                                            <h4 className="font-medium mb-2">Product</h4>
-                                            <p className="text-sm text-gray-600">
-                                                Product ID: {orderDetail.order.productId}
-                                            </p>
-                                            <p className="text-sm text-gray-600">
-                                                Quantity: {orderDetail.order.quantity}
-                                            </p>
+                                        <div className="border border-gray-500 rounded-md p-4 flex gap-4">
+                                            <div className="w-20 h-20 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                                                {orderDetail.order.product.images?.length > 0 ? (
+                                                    <img
+                                                        src={orderDetail.order.product.images[0].url}
+                                                        alt={orderDetail.order.product.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="border rounded-md bg-gray-300 w-full h-full flex items-center justify-center text-xs text-gray-400">
+                                                        No Image
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-semibold text-gray-800">
+                                                    {orderDetail.order.product.name}
+                                                </h4>
+
+                                                <p className="text-sm text-gray-500 line-clamp-2">
+                                                    {orderDetail.order.product.description}
+                                                </p>
+
+                                                <div className="mt-2 flex items-center justify-between">
+                                                    <div className="text-sm">
+                                                        <span className="font-medium text-gray-800">
+                                                            ${orderDetail.order.product.price}
+                                                        </span>
+                                                    </div>
+                                                    <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-700">
+                                                        Qty: {orderDetail.order.quantity}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm text-gray-600 line-clamp-2">
+                                                    Total: ${orderDetail.order.product.price * orderDetail.order.quantity}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="border rounded-md p-4">
+
+                                        <div className="border border-gray-500 rounded-md p-4">
                                             <h4 className="font-medium mb-2">User</h4>
                                             <p className="text-sm text-gray-600">
                                                 Name: {orderDetail.user.name}
@@ -80,7 +110,7 @@ const MyOrders = () => {
                                                 Phone: {orderDetail.user.phone}
                                             </p>
                                         </div>
-                                        <div className="border rounded-md p-4">
+                                        <div className="border border-gray-500 rounded-md p-4">
                                             <h4 className="font-medium mb-2">Address</h4>
                                             <p className="text-sm text-gray-600">
                                                 {orderDetail.address.fullName}
