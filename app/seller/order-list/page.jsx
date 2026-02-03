@@ -9,56 +9,49 @@ import Loading from "@/components/Loading";
 const OrderList = () => {
 
     const { OrderDetails, currency } = useAppContext();
-
-    const [orderDetails, setOrderDetails] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchSellerOrders = async () => {
-        setOrderDetails(OrderDetails);
-        setLoading(false);
-    }
-
     useEffect(() => {
-        fetchSellerOrders();
-    }, []);
+        if (OrderDetails.length > 0) {
+            setLoading(false);
+        }
+    }, [OrderDetails]);
 
     return (
         <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
             {loading ? <Loading /> : <div className="md:p-10 p-4 space-y-5">
-                <h2 className="text-lg font-medium">Orders</h2>
+                <h1 className="text-lg font-medium">Orders</h1>
                 <div className="max-w-4xl rounded-md">
-                    {orderDetails.map((orderDetails, index) => (
-                        <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-t border-gray-300">
+                    {OrderDetails.map((OrderDetails, index) => (
+                        <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border m-2 rounded-md border-gray-400 transition">
                             <div className="flex-1 flex gap-5 max-w-80">
                                 <Image
                                     className="max-w-16 max-h-16 object-cover"
                                     src={assets.box_icon}
                                     alt="box_icon"
                                 />
-                                <p className="flex flex-col gap-3">
-                                    <span className="font-medium">
-                                        {orderDetails.items.map((item) => item.product.name + ` x ${item.quantity}`).join(", ")}
-                                    </span>
-                                    <span>Items : {orderDetails.items.length}</span>
+                                <p className="flex flex-col">
+                                    <span className="font-medium">{OrderDetails.order.product.name}</span>
+                                    <span>Qty: {OrderDetails.order.quantity}</span>
+                                    <span>{OrderDetails.order.product.price} {currency}</span>
+                                    <span>Total: {OrderDetails.order.product.price * OrderDetails.order.quantity} {currency}</span>
                                 </p>
                             </div>
-                            <div>
-                                <p>
-                                    <span className="font-medium">{orderDetails.address.fullName}</span>
-                                    <br />
-                                    <span >{orderDetails.address.area}</span>
-                                    <br />
-                                    <span>{`${orderDetails.address.city}, ${orderDetails.address.state}`}</span>
-                                    <br />
-                                    <span>{orderDetails.address.phoneNumber}</span>
-                                </p>
-                            </div>
-                            <p className="font-medium my-auto">{currency}{orderDetails.amount}</p>
                             <div>
                                 <p className="flex flex-col">
-                                    <span>Method : COD</span>
-                                    <span>Date : {new Date(orderDetails.date).toLocaleDateString()}</span>
+                                    <span className="font-medium">{OrderDetails.address.fullName}</span>
+                                    <span>{OrderDetails.address.streetName}</span>
+                                    <span>{OrderDetails.address.suburb}</span>
+                                    <span>{OrderDetails.address.city}</span>
+                                    <span>{OrderDetails.address.country}</span>
+                                    <span>{OrderDetails.address.postalCode}</span>
+                                </p>
+                            </div>
+                            <div>
+                                <p className="flex flex-col">
+                                    <span>Order date : {new Date(OrderDetails.date).toLocaleDateString()}</span>
                                     <span>Payment : Pending</span>
+                                    <span>Delivery : Pending</span>
                                 </p>
                             </div>
                         </div>
