@@ -10,7 +10,7 @@ export async function getOrderDetail({ id = null } = {}) {
   const token = getToken();
   const queryParams = new URLSearchParams();
 
-  let url = `${API_URL}/api/v1/OrderDetails`;
+  let url = `${API_URL}/api/v1/orderDetails`;
 
   if (id) {
     url += `/${id}`;

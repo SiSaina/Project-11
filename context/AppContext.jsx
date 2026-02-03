@@ -5,8 +5,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { login as loginService, logout as logoutService, register as registerService } from "@/services/auth";
 import { getUser, getUserAddress } from "@/services/user"
 import { getOneProduct, getProduct } from "@/services/product";
-import { getUserOrderDetail } from "@/services/orderDetail";
+import { getOrderDetail } from "@/services/orderDetail";
 import { isHTTPMethod } from "next/dist/server/web/http";
+import { getOrder } from "@/services/order";
 export const AppContext = createContext();
 
 export const useAppContext = () => {
@@ -23,16 +24,25 @@ export const AppContextProvider = (props) => {
     const [userData, setUserData] = useState(null)
     const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
-    const [userOrders, setUserOrders] = useState([])
+    const [Orders, setOrders] = useState([])
+    const [OrderDetails, setOrderDetails] = useState([])
 
-    // const fetchUserOrders = async () => {
-    //     try {
-    //         const data = await getUserOrderDetail(userData.id);
-    //         setUserOrders(data.data);
-    //     } catch (error) {
-    //         console.error("Failed to fetch user orders: ", error);
-    //     }
-    // }
+    const fetchOrders = async () => {
+        try {
+            const data = await getOrder();
+            setOrders(data.data);
+        } catch (error) {
+            console.error("Failed to fetch orders: ", error);
+        }
+    }
+    const fetchOrderDetails = async () => {
+        try {
+            const data = await getOrderDetail();
+            setOrderDetails(data.data ?? []);
+        } catch (error) {
+            console.error("Failed to fetch order details: ", error);
+        }
+    }
     const fetchProductData = async () => {
         try {
             const data = await getProduct(true, true, true);
@@ -141,6 +151,8 @@ export const AppContextProvider = (props) => {
     useEffect(() => {
         fetchUserData();
         fetchProductData();
+        fetchOrders();
+        fetchOrderDetails();
     }, [])
 
     const value = {
@@ -151,7 +163,8 @@ export const AppContextProvider = (props) => {
         userData, fetchUserData,
         products, fetchProductData,
         product, fetchOneProduct,
-        userOrders,
+        Orders, fetchOrders,
+        OrderDetails, fetchOrderDetails,
         cartItems, setCartItems,
         addToCart, updateCartQuantity,
         getCartCount, getCartAmount
