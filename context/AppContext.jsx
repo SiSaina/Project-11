@@ -45,7 +45,10 @@ export const AppContextProvider = (props) => {
     }
     const fetchProductData = async () => {
         try {
-            const data = await getProduct(true, true, true);
+            const data = await getProduct({
+                includeImages: true,
+                includeCategory: true
+            });
             setProducts(data.data ?? []);
         } catch (err) {
             console.error("Failed to fetch product: ", err);

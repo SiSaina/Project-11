@@ -7,11 +7,10 @@ import { usePathname } from 'next/navigation';
 const SideBar = () => {
     const pathname = usePathname()
     const menuItems = [
-        { name: 'Category', path: '/seller/category', icon: assets.add_icon},
+        { name: 'Category', path: '/seller/category', icon: assets.add_icon },
         { name: 'Add Product', path: '/seller', icon: assets.add_icon },
-        { name: 'Product List', path: '/seller/product-list-copy', icon: assets.product_list_icon },
-        { name: 'Order List', path: '/seller/order-list', icon: assets.order_icon},
-        { name: 'Orders', path: '/seller/orders', icon: assets.order_icon },
+        { name: 'Product List', path: '/seller/product-list', icon: assets.product_list_icon },
+        { name: 'Order List', path: '/seller/order-list', icon: assets.order_icon },
     ];
 
     return (
@@ -24,7 +23,9 @@ const SideBar = () => {
                     <Link href={item.path} key={item.name} passHref>
                         <div
                             className={
-                                `flex items-center py-3 px-4 gap-3 ${isActive
+                                `flex items-center py-3 px-4 gap-3 
+                                  transition-all duration-300 ease-in-out
+                                  ${isActive
                                     ? "border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90"
                                     : "hover:bg-gray-100/90 border-white"
                                 }`
