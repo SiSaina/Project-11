@@ -97,7 +97,7 @@ const OrderList = () => {
                             </div>
                             <div className="flex gap-2 mt-4 md:mt-0">
                                 <button
-                                    onClick={() => router.push(`/seller/product-list/${OrderDetails.id}/edit`)}
+                                    onClick={() => router.push(`/seller/order-list/${OrderDetails.id}/edit`)}
                                     className="flex items-center h-10 gap-1 px-3 py-2 bg-blue-600 text-white rounded-md transition hover:bg-blue-800 active:scale-95"
                                 >
                                     <span className="hidden md:block">Edit</span>
