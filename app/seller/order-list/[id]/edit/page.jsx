@@ -22,7 +22,6 @@ const OrderEdit = () => {
     deliveryStatus: "",
   });
 
-  /* Load order */
   useEffect(() => {
     if (!OrderDetails?.length) return;
 
