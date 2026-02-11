@@ -1,31 +1,25 @@
-'use client'
-import React, { useEffect, useState } from "react";
-import { getCategory, postCategory } from "@/services/category";
+'use client';
+
+import React, { useState } from "react";
+import { postCategory } from "@/services/category";
+import { useAppContext } from "@/context/AppContext";
 
 const Category = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
-
-  const fetchCategories = async () => {
-    try {
-      const data = await getCategory();
-      setCategories(data.data ?? []);
-    } catch (error) {
-      console.error("Failed to fetch categories: ", error.message);
-    }
-  }
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const { Categories, fetchCategories } = useAppContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!name.trim()) return;
+
     setLoading(true);
     try {
-      await postCategory({name});
+      await postCategory({ name: name.trim() });
       setName("");
-      fetchCategories();
+      if (fetchCategories) {
+        await fetchCategories();
+      }
     } catch (error) {
       console.error("Failed to create category:", error.message);
       alert("Failed to create category");
@@ -35,35 +29,39 @@ const Category = () => {
   };
 
   return (
-    <div className="flex-1 min-h-screen flex flex-col justify-center items-center">
+    <div className="flex-1 min-h-screen flex flex-col justify-center items-center gap-6 px-4 md:px-10">
+      
       <form
         onSubmit={handleSubmit}
-        className="md:p-10 p-4 space-y-5 max-w-lg w-full border rounded-lg shadow bg-white"
+        className="w-full max-w-lg border rounded-lg shadow bg-white p-6 space-y-6"
       >
         <h1 className="text-2xl font-bold text-center">Add Category</h1>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-base font-medium" htmlFor="category-name">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="category-name" className="text-base font-medium">
             Category Name
           </label>
           <input
             id="category-name"
             type="text"
             placeholder="Enter category name"
-            className="outline-none py-2 px-3 rounded border border-gray-500/40"
-            onChange={(e) => setName(e.target.value)}
+            className="outline-none py-2 px-3 rounded border border-gray-300"
             value={name}
+            onChange={(e) => setName(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
+
         <button
           type="submit"
           disabled={loading}
-          className="w-full px-8 py-2.5 bg-orange-600 text-white font-medium rounded disabled:opacity-50"
+          className="w-full py-2.5 bg-orange-600 text-white font-medium rounded hover:bg-orange-700 disabled:opacity-50"
         >
           {loading ? "Adding..." : "Add Category"}
         </button>
       </form>
+
       <div className="w-full max-w-3xl border rounded-lg shadow bg-white overflow-hidden">
         <table className="w-full border-collapse">
           <thead className="bg-gray-100">
@@ -73,8 +71,8 @@ const Category = () => {
             </tr>
           </thead>
           <tbody>
-            {categories.length > 0 ? (
-              categories.map((cat) => (
+            {Categories?.length > 0 ? (
+              Categories.map((cat) => (
                 <tr key={cat.id}>
                   <td className="border px-4 py-2">{cat.id}</td>
                   <td className="border px-4 py-2">{cat.name}</td>
