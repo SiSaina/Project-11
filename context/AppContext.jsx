@@ -8,6 +8,7 @@ import { getOneProduct, getProduct } from "@/services/product";
 import { getOrderDetail } from "@/services/orderDetail";
 import { isHTTPMethod } from "next/dist/server/web/http";
 import { getOrder } from "@/services/order";
+import { getCategory } from "@/services/category";
 export const AppContext = createContext();
 
 export const useAppContext = () => {
@@ -26,6 +27,7 @@ export const AppContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({})
     const [Orders, setOrders] = useState([])
     const [OrderDetails, setOrderDetails] = useState([])
+    const [Categories, setCategories] = useState([])
 
     const fetchOrders = async () => {
         try {
@@ -62,7 +64,6 @@ export const AppContextProvider = (props) => {
             console.error("Failed to fetch product: ", err);
         }
     }
-
     const fetchUserData = async () => {
         try {
             const data = await getUser();
@@ -75,7 +76,14 @@ export const AppContextProvider = (props) => {
             setUserData(null);
         }
     }
-
+    const fetchCategories = async () => {
+        try {
+            const data = await getCategory();
+            setCategories(data.data);
+        } catch (error) {
+            console.error("Failed to fetch categories:", error.message);
+        }
+    };
     const register = async (name, email, password, password_confirmation) => {
         const user = await registerService(name, email, password, password_confirmation);
         if (user) {
@@ -90,10 +98,8 @@ export const AppContextProvider = (props) => {
         if (user) {
             const fullUser = await getUser();
             setUserData(fullUser);
-
             const isSeller = fullUser?.role_id === 1 || fullUser?.role_id === 2;
             setIsSeller(isSeller);
-
             router.push('/');
         }
     }
@@ -103,8 +109,7 @@ export const AppContextProvider = (props) => {
         setIsSeller(false);
         router.push('/');
     }
-
-    const addToCart = async (itemId) => {
+    const addToCart = async (itemId) => {       
 
         let cartData = structuredClone(cartItems);
         if (cartData[itemId]) {
@@ -116,7 +121,6 @@ export const AppContextProvider = (props) => {
         setCartItems(cartData);
 
     }
-
     const updateCartQuantity = async (itemId, quantity) => {
 
         let cartData = structuredClone(cartItems);
@@ -128,7 +132,6 @@ export const AppContextProvider = (props) => {
         setCartItems(cartData)
 
     }
-
     const getCartCount = () => {
         let totalCount = 0;
         for (const items in cartItems) {
@@ -138,7 +141,6 @@ export const AppContextProvider = (props) => {
         }
         return totalCount;
     }
-
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const itemId in cartItems) {
@@ -156,6 +158,7 @@ export const AppContextProvider = (props) => {
         fetchProductData();
         fetchOrders();
         fetchOrderDetails();
+        fetchCategories();
     }, [])
 
     const value = {
@@ -163,14 +166,16 @@ export const AppContextProvider = (props) => {
         login, logout,
         currency, router,
         isSeller, setIsSeller,
+        cartItems, setCartItems,
+        addToCart, updateCartQuantity,
+        getCartCount, getCartAmount,
+
         userData, fetchUserData,
         products, fetchProductData,
         product, fetchOneProduct,
         Orders, fetchOrders,
         OrderDetails, fetchOrderDetails,
-        cartItems, setCartItems,
-        addToCart, updateCartQuantity,
-        getCartCount, getCartAmount
+        Categories, fetchCategories
     }
 
     return (

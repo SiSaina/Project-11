@@ -70,7 +70,6 @@ const ProductListCopy = () => {
                     className="w-20 h-20 object-cover rounded transition-transform duration-300 group-hover:scale-105"
                     width={80}
                     height={80}
-
                   />
                   <div className="flex flex-col">
                     <span className="font-medium">{product.name}</span>

@@ -51,7 +51,6 @@ const Product = () => {
                             height={720}
                         />
                     </div>
-
                     <div className="grid grid-cols-4 gap-4">
                         {productData?.image?.map((image, index) => (
                             <div

@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 const outfit = Outfit({ subsets: ['latin'], weight: ["300", "400", "500"] })
 
 export const metadata = {
-  title: "QuickCart - GreatStack",
+  title: "Saina E-Commerce",
   description: "E-Commerce with Next.js ",
 };
 
